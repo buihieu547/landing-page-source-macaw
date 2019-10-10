@@ -21,12 +21,12 @@ const Footer = () => {
  						<ul className="footer-social">
  							<li className="float-left">
  								<a href="https://www.facebook.com/macawapp/">
- 									<img src={require('../../assets/images/facebook.svg')} />
+ 									<img alt="Facebook" src={require('../../assets/images/facebook.svg')} />
  								</a>
  							</li>
  							<li className="float-left">
  								<a href="https://www.linkedin.com/company/macaw-collaborative-work-management/">
- 									<img src={require('../../assets/images/linkedin.svg')} />
+ 									<img alt="Linkedin" src={require('../../assets/images/linkedin.svg')} />
  								</a>
  							</li>
  						</ul>

@@ -11,7 +11,7 @@ const tab = [
 		key: 'video_1',
 		id: 1,
 		pane: (ref, onEnded, mobile) => (
-			<video controls={false} autoPlay={!!mobile} loop={!!mobile} ref={ref} onEnded={onEnded}>
+			<video muted={true} controls={false} autoPlay={!!mobile} loop={!!mobile} ref={ref} onEnded={onEnded}>
 			  	<source src="https://macaw-app.com/static/focus/section_1.mp4" type="video/mp4" />
 			  	<source src="https://macaw-app.com/static/focus/section_1.webm" type="video/webm" />
 			  	Your browser does not support HTML5 video.
@@ -23,7 +23,7 @@ const tab = [
 		id: 2,
 		key: 'video_2',
 		pane: (ref, onEnded, mobile) => (
-			<video controls={false} autoPlay={!!mobile} loop={!!mobile} ref={ref} onEnded={onEnded}>
+			<video muted={true} controls={false} autoPlay={!!mobile} loop={!!mobile} ref={ref} onEnded={onEnded}>
 			  	<source src="https://macaw-app.com/static/focus/section_2.mp4" type="video/mp4" />
 			  	<source src="https://macaw-app.com/static/focus/section_2.webm" type="video/webm" />
 			  	Your browser does not support HTML5 video.
@@ -35,7 +35,7 @@ const tab = [
 		id: 3,
 		key: 'video_3',
 		pane: (ref, onEnded, mobile) => (
-			<video controls={false} autoPlay={!!mobile} loop={!!mobile} ref={ref} onEnded={onEnded}>
+			<video muted={true} controls={false} autoPlay={!!mobile} loop={!!mobile} ref={ref} onEnded={onEnded}>
 			  	<source src="https://macaw-app.com/static/focus/section_3.mp4" type="video/mp4" />
 			  	<source src="https://macaw-app.com/static/focus/section_3.webm" type="video/webm" />
 			  	Your browser does not support HTML5 video.
@@ -47,14 +47,13 @@ const tab = [
 		id: 4,
 		key: 'video_4',
 		pane: (ref, onEnded, mobile) => (
-			<video controls={false} autoPlay={!!mobile} loop={!!mobile} ref={ref} onEnded={onEnded}>
+			<video muted={true} controls={false} autoPlay={!!mobile} loop={!!mobile} ref={ref} onEnded={onEnded}>
 			  	<source src="https://macaw-app.com/static/focus/section_4.mp4" type="video/mp4" />
 			  	<source src="https://macaw-app.com/static/focus/section_4.webm" type="video/webm" />
 			  	Your browser does not support HTML5 video.
 			</video>		)
 	}
 ];
-const isPlay = [0, 0, 0, 0];
 let isEnter = false;
 let isMobileBack = false;
 
@@ -72,32 +71,19 @@ class Concentration extends Component {
     	this.video_4 = React.createRef();
 	}
 
-	handleVideo = (video, tab, ok) => {
-		const number = tab - 1;
-		if (!isPlay[number] || ok) {
-			isPlay[number] = 1;
-			const playPromise = video.play();
-			if (playPromise !== undefined) {
-				playPromise.then(e => {
-					isPlay[number] = 0;
-					video.currentTime = 0;
-				}).catch(e => {
-					setTimeout(() => {
-						this.handleVideo(video, tab, true);
-					}, 2000);
-				});
-			}
-		}
+	handleVideo = (video) => {
+		video.currentTime = 0;
+		video.play();
 	}
 
 	componentDidMount = () => {
-		isMobileBack = this.props.mobile
+		isMobileBack = this.props.mobile;
 	}
 
 	componentDidUpdate = () => {
 		if (isMobileBack && !this.props.mobile && isEnter) {
 			const { activeTab } = this.state;
-			this.handleVideo(this[tab[activeTab - 1].key].current, activeTab);
+			this.handleVideo(this[tab[activeTab - 1].key].current);
 		}
 
 		isMobileBack = this.props.mobile;
@@ -122,7 +108,7 @@ class Concentration extends Component {
       		});
     	}
 
-    	this.handleVideo(this[ob.key].current, ob.id);
+    	this.handleVideo(this[ob.key].current);
   	}	
 
 	enter = () => {
@@ -132,7 +118,7 @@ class Concentration extends Component {
 
         if (!isEnter && !this.props.mobile) {
         	isEnter = true;
-        	this.handleVideo(this.video_1.current, 1);
+        	this.handleVideo(this.video_1.current);
         }
 	}
 

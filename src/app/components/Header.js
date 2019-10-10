@@ -42,7 +42,7 @@ class Header extends Component {
 	 		<div className={sticky ? 'is-sticky header' : 'header'}>
 	 			<div className="container clearfix">
 	 				<div className="logo float-left">
-	 					<img src={require('../../assets/images/logo.svg')} />
+	 					<img alt="Logo" src={require('../../assets/images/logo.svg')} />
 	 				</div>
 	 				<label className="float-right mobile-toggle-menu" htmlFor="mobile-menu">
 	 					<span></span>
