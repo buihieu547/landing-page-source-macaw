@@ -10,13 +10,21 @@ const tab = [
 		title: 'Removing all noise by entering Focus Mode.',
 		key: 'video_1',
 		id: 1,
-		pane: (ref, onEnded, mobile) => (
-			<video muted={true} controls={false} autoPlay={!!mobile} loop={!!mobile} ref={ref} onEnded={onEnded}>
-			  	<source src="https://macaw-app.com/static/focus/section_1.mp4" type="video/mp4" />
-			  	<source src="https://macaw-app.com/static/focus/section_1.webm" type="video/webm" />
-			  	Your browser does not support HTML5 video.
-			</video>
-		)
+		pane: (ref, onEnded, mobile) => {
+			if (isEnter) {
+				return (
+					<video muted={true} controls={false} autoPlay={!!mobile} loop={!!mobile} ref={ref} onEnded={onEnded}>
+				  	<source src="https://macaw-app.com/static/focus/section_1.mp4" type="video/mp4" />
+				  	<source src="https://macaw-app.com/static/focus/section_1.webm" type="video/webm" />
+				  		Your browser does not support HTML5 video.
+					</video>
+				)
+			} else {
+				return (
+					<img alt="video caption" src={require('../../assets/images/video.png')} />
+				)
+			}
+		}
 	},
 	{
 		title: 'Focus on exactly 1 single task you’re working on - Work In Progress.',
@@ -108,8 +116,18 @@ class Concentration extends Component {
       		});
     	}
 
-    	this.handleVideo(this[ob.key].current);
-  	}	
+    	this.checkLoadVideo(this[ob.key]);
+  	}
+
+  	checkLoadVideo = (video) => {
+  		if (video.current) {
+  			this.handleVideo(video.current);
+  		} else {
+  			setTimeout(() => {
+  				this.checkLoadVideo(video);
+  			}, 10);
+  		}
+  	}
 
 	enter = () => {
 		if (window.location.hash !== '#focus-on-your-task') {
@@ -118,7 +136,8 @@ class Concentration extends Component {
 
         if (!isEnter && !this.props.mobile) {
         	isEnter = true;
-        	this.handleVideo(this.video_1.current);
+        	this.forceUpdate();
+        	this.checkLoadVideo(this.video_1);
         }
 	}
 
@@ -134,7 +153,9 @@ class Concentration extends Component {
 
 		const tabPane = tab.map(e => (
 			<TabPane tabId={e.id} key={e.id}>
-				{e.pane(this[e.key], this.onEnded.bind(this, e.id), this.props.mobile)}       
+				{
+					e.id === this.state.activeTab && e.pane(this[e.key], this.onEnded.bind(this, e.id), this.props.mobile)
+				}       
 			</TabPane>
 		));
 
@@ -148,40 +169,39 @@ class Concentration extends Component {
 		));
 
 	 	return (
-	 		<Waypoint 
-                onEnter={this.enter}
-            >
-		 		<section className="section features concentration" id="focus-on-your-task">
-		 			<div className="container">
-		 				<div className="title-gr">
-                            <h2>
-                                Focus on daily tasks
-                            </h2>
-                            <p>
-                                Distraction-free workspace for smooth & effective execution
-                            </p>
-                        </div>
-                        { this.props.mobile ?  
-                        	<Slider {...settings}>
-                        		{mobileVideo}
-                        	</Slider>
-                        :
-                        	<div className="row">
-								<div className="col-lg-8">
-									<TabContent activeTab={this.state.activeTab}>
-									    {tabPane}
-									</TabContent>
-								</div>
-								<div className="col-lg-4">
-	                        		<Nav tabs>
-									    {navLink}
-									</Nav>
-								</div>
-                        	</div>
-                    	}
-		 			</div>
-		 		</section>
-	 		</Waypoint>
+	 		<section className="section features concentration" id="focus-on-your-task">
+	 			<div className="container">
+	 				<div className="title-gr">
+                        <h2>
+                            Focus on daily tasks
+                        </h2>
+                        <p>
+                            Distraction-free workspace for smooth & effective execution
+                        </p>
+                    </div>
+                    <div className="waypoint">
+                		<Waypoint onEnter={this.enter} />
+                	</div>
+                    { this.props.mobile ?  
+                    	<Slider {...settings}>
+                    		{mobileVideo}
+                    	</Slider>
+                    :
+                    	<div className="row">
+							<div className="col-lg-8">
+								<TabContent activeTab={this.state.activeTab}>
+								    {tabPane}
+								</TabContent>
+							</div>
+							<div className="col-lg-4">
+                        		<Nav tabs>
+								    {navLink}
+								</Nav>
+							</div>
+                    	</div>
+                	}
+	 			</div>
+	 		</section>
 	 	)
 	}
 }

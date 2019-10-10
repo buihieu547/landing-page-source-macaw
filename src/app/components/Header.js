@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import ButtonLink from '../shared/Button';
 
 class Header extends Component {
 	constructor(props) {
@@ -13,13 +14,13 @@ class Header extends Component {
 		const doc = document.documentElement,
 			top = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
 
-		if (top > 300 && !this.state.sticky) {
+		if (top > 550 && !this.state.sticky) {
 			this.setState(() => ({
             	sticky: true
         	}));
 		}
 
-		if (top < 300 && this.state.sticky) {
+		if (top < 550 && this.state.sticky) {
 			this.setState(() => ({
             	sticky: false
         	}));
@@ -50,10 +51,13 @@ class Header extends Component {
 	 					<span></span>
 	 				</label>
 	 				<input type="checkbox" className="d-none" id="mobile-menu" />
+	 				<ButtonLink href="https://workplace.macaw-app.com/signup" className="btn-primary">
+						Start for free
+					</ButtonLink>
 	 				<ul className="main-menu">
 	 					<li>
 	 						<a href="https://macaw.nolt.io/widget">
-	 							feature
+	 							Request a feature
 	 						</a>
 	 					</li>
 	 					<li id="pricing_link">
@@ -62,16 +66,10 @@ class Header extends Component {
 	 						</a>
 	 					</li>
 	 					<li>
-	 						<a href="https://workplace.macaw-app.com/signup">
-	 							support
+	 						<a href="https://workplace.macaw-app.com/login">
+	 							log in
 	 						</a>
 	 					</li>
-	 					<li>
-	 						<a href="https://workplace.macaw-app.com/signup">
-	 							sign up
-	 						</a>
-	 					</li>
-
 	 				</ul>
 	 			</div>
 	 		</div>

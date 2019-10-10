@@ -10,13 +10,21 @@ const tab = [
 		title: 'Team performance: Burn-up chart.',
 		key: 'video_1',
 		id: 1,
-		pane: (ref, onEnded, mobile) => (
-			<video muted={true} controls={false} autoPlay={!!mobile} loop={!!mobile} ref={ref} onEnded={onEnded}>
-			  	<source src="https://macaw-app.com/static/collaborate/section_1.mp4" type="video/mp4" />
-			  	<source src="https://macaw-app.com/static/collaborate/section_1.webm" type="video/webm" />
-			  	Your browser does not support HTML5 video.
-			</video>
-		)
+		pane: (ref, onEnded, mobile) => {
+			if (isEnter) {
+				return (
+					<video muted={true} controls={false} autoPlay={!!mobile} loop={!!mobile} ref={ref} onEnded={onEnded}>
+				  	<source src="https://macaw-app.com/static/collaborate/section_1.mp4" type="video/mp4" />
+				  	<source src="https://macaw-app.com/static/collaborate/section_1.webm" type="video/webm" />
+				  		Your browser does not support HTML5 video.
+					</video>
+				)
+			} else {
+				return (
+					<img alt="video caption" src={require('../../assets/images/video.png')} />
+				)
+			}
+		}
 	},
 	{
 		title: 'Team transparency: all member progress.',
@@ -96,8 +104,18 @@ class Cooperation extends Component {
       		});
     	}
 
-    	this.handleVideo(this[ob.key].current);
-  	}	
+    	this.checkLoadVideo(this[ob.key]);
+  	}
+
+  	checkLoadVideo = (video) => {
+  		if (video.current) {
+  			this.handleVideo(video.current);
+  		} else {
+  			setTimeout(() => {
+  				this.checkLoadVideo(video);
+  			}, 10);
+  		}
+  	}
 
 	enter = () => {
 		if (window.location.hash !== '#collaborate-with-your-team') {
@@ -106,7 +124,8 @@ class Cooperation extends Component {
 
         if (!isEnter && !this.props.mobile) {
         	isEnter = true;
-        	this.handleVideo(this.video_1.current);
+        	this.forceUpdate();
+        	this.checkLoadVideo(this.video_1);
         }
 	}
 
@@ -122,7 +141,9 @@ class Cooperation extends Component {
 
 		const tabPane = tab.map(e => (
 			<TabPane tabId={e.id} key={e.id}>
-				{e.pane(this[e.key], this.onEnded.bind(this, e.id), this.props.mobile)}       
+				{
+					e.id === this.state.activeTab && e.pane(this[e.key], this.onEnded.bind(this, e.id), this.props.mobile)
+				}      
 			</TabPane>
 		));
 
@@ -136,40 +157,39 @@ class Cooperation extends Component {
 		));
 
 	 	return (
-	 		<Waypoint 
-                onEnter={this.enter}
-            >
-		 		<section className="section features cooperation" id="collaborate-with-your-team">
-		 			<div className="container">
-		 				<div className="title-gr">
-                            <h2>
-                                Collaborate with your team
-                            </h2>
-                            <p>
-                                Team performance. Team transparency. Team communication. Day to day.
-                            </p>
-                        </div>
-                        { this.props.mobile ?  
-                        	<Slider {...settings}>
-                        		{mobileVideo}
-                        	</Slider>
-                        :
-                        	<div className="row">
-                        		<div className="col-lg-4">
-	                        		<Nav tabs>
-									    {navLink}
-									</Nav>
-								</div>
-								<div className="col-lg-8">
-									<TabContent activeTab={this.state.activeTab}>
-									    {tabPane}
-									</TabContent>
-								</div>
-                        	</div>
-                    	}
-		 			</div>
-		 		</section>
-	 		</Waypoint>
+	 		<section className="section features cooperation" id="collaborate-with-your-team">
+	 			<div className="container">
+	 				<div className="title-gr">
+                        <h2>
+                            Collaborate with your team
+                        </h2>
+                        <p>
+                            Team performance. Team transparency. Team communication. Day to day.
+                        </p>
+                    </div>
+                    <div className="waypoint">
+                    	<Waypoint onEnter={this.enter} />
+                    </div>
+                    { this.props.mobile ?  
+                    	<Slider {...settings}>
+                    		{mobileVideo}
+                    	</Slider>
+                    :
+                    	<div className="row">
+                    		<div className="col-lg-4">
+                        		<Nav tabs>
+								    {navLink}
+								</Nav>
+							</div>
+							<div className="col-lg-8">
+								<TabContent activeTab={this.state.activeTab}>
+								    {tabPane}
+								</TabContent>
+							</div>
+                    	</div>
+                	}
+	 			</div>
+	 		</section>
 	 	)
 	}
 }

@@ -68,6 +68,7 @@ class Pricing extends Component {
                     this.setState(() => ({packageId: e.id}));
                 }
             }}>
+                {(e.id === packageId) && <i className="fas fa-check"></i>}
                 {e.name}
             </DropdownItem>
         ));
