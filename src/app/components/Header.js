@@ -14,13 +14,13 @@ class Header extends Component {
 		const doc = document.documentElement,
 			top = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
 
-		if (top > 550 && !this.state.sticky) {
+		if (top > 350 && !this.state.sticky) {
 			this.setState(() => ({
             	sticky: true
         	}));
 		}
 
-		if (top < 550 && this.state.sticky) {
+		if (top < 350 && this.state.sticky) {
 			this.setState(() => ({
             	sticky: false
         	}));
